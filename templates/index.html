@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Text Response Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7fa;
+            color: #333;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+
+        h3 {
+            margin: 10px 0;
+            font-size: 1.25rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .response-container {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .response-container h3 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .response-container pre {
+            background-color: #eef2f7;
+            padding: 15px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-size: 1rem;
+            margin-top: 10px;
+        }
+
+        .alert {
+            background-color: #ffcc00;
+            color: #333;
+            padding: 10px;
+            margin-top: 15px;
+            border-radius: 5px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>AI Text Response Generator</h1>
+        <h3>Enter your text below and get a response from the AI:</h3>
+    </header>
+
+    <div class="container">
+        <form id="textForm">
+            <textarea id="userInput" placeholder="Type your text here..."></textarea><br><br>
+            <button type="button" onclick="submitText()">Submit</button>
+        </form>
+
+        <div id="response" class="response-container"></div>
+    </div>
+
+    <script>
+        async function submitText() {
+            const userInput = document.getElementById('userInput').value;
+
+            if (!userInput) {
+                document.getElementById('response').innerHTML = '<div class="alert">Please enter some text!</div>';
+                return;
+            }
+
+            document.getElementById('response').innerText = "Generating response...";
+
+            try {
+                const response = await fetch('http://127.0.0.1:5000/generate_response', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ text: userInput }),
+                });
+
+                const data = await response.json();
+                if (data.error) {
+                    document.getElementById('response').innerHTML = `<div class="alert">Error: ${data.error}</div>`;
+                } else {
+                    document.getElementById('response').innerHTML = `
+                        <h3>AI Response:</h3>
+                        <pre>${data.response}</pre>
+                    `;
+                }
+            } catch (error) {
+                console.error(error);
+                document.getElementById('response').innerText = "An error occurred.";
+            }
+        }
+    </script>
+</body>
+</html>
