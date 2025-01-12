@@ -125,7 +125,7 @@
             document.getElementById('response').innerText = "Generating response...";
 
             try {
-                const response = await fetch('http://127.0.0.1:5000/generate_response', {
+                const response = await fetch('https://gen-ai-vercel-simple.vercel.app/generate_response', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
