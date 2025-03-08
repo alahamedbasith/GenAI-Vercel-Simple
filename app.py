@@ -2,8 +2,10 @@ from flask import Flask, request, jsonify, render_template
 import google.generativeai as genai
 import os
 from dotenv import load_dotenv
+from flask_cors import CORS
 
-app = Flask(__name__) 
+app = Flask(__name__)
+CORS(app)  
 
 load_dotenv()
 GEMINI_API_KEY = os.getenv("GEMINI_KEY")
